@@ -1,16 +1,42 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/blocks/kaltura/lib.php');
-require_once($CFG->dirroot.'/blocks/kaltura/locallib.php');
-require_js($CFG->wwwroot.'/blocks/kaltura/js/jquery.js');
-require_js($CFG->wwwroot.'/blocks/kaltura/js/kvideo.js');
-require_js($CFG->wwwroot.'/blocks/kaltura/js/swfobject.js');
-
 class resource_kalturaswfdoc extends resource_base {
 
-    function resource_kalturavideo($cmid=0) {
+    function resource_kalturaswfdoc($cmid=0) {
+        global $COURSE, $CFG;
+
+        require_once($CFG->dirroot.'/blocks/kaltura/lib.php');
+        require_once($CFG->dirroot.'/blocks/kaltura/locallib.php');
+        require_js($CFG->wwwroot.'/blocks/kaltura/js/jquery.js');
+        require_js($CFG->wwwroot.'/blocks/kaltura/js/kvideo.js');
+        require_js($CFG->wwwroot.'/blocks/kaltura/js/swfobject.js');
+
         parent::resource_base($cmid);
+
+        $this->release  = '1.2';
+
+        // Add Kaltura block instance (needed for backup and restor purposes)
+        $blockid = get_field('block', 'id', 'name', 'kaltura');
+
+        if ($blockid) {
+
+            if (!record_exists('block_instance', 'pageid', $COURSE->id, 'blockid', $blockid)) {
+
+                $block              = new stdClass();
+                $block->blockid     = $blockid;
+                $block->pageid      = $COURSE->id;
+                $block->pagetype    = 'course-view';
+                $block->position    = 'r';
+                $block->weight      = '3';
+                $block->visible     = 0;
+                $block->configdata  = 'Tjs=';
+
+                insert_record('block_instance', $block);
+            }
+        }
+
+
     }
 
     function display() {
