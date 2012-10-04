@@ -187,7 +187,7 @@ class resource_kalturaswfdoc extends resource_base {
 
     function setup_elements(&$mform) {
 
-        global $CFG, $USER;
+        global $CFG, $USER, $COURSE;
         $isNew      = true;
         $ppt_id     = '';
         $video_id   = '';
@@ -325,7 +325,7 @@ class resource_kalturaswfdoc extends resource_base {
             $selvidbtn->setType('button');
             $selvidbtn->setValue('Add Video');
 
-            $cw_url = $CFG->wwwroot.'/blocks/kaltura/kcw.php?mod=ppt_resource';
+            $cw_url = $CFG->wwwroot.'/blocks/kaltura/kcw.php?courseid='.$COURSE->id.'&mod=ppt_resource';
 
             $display = empty($entry) ? 'display:inline;' : 'display:none;';
             $selvidbtn_attributes = array(
